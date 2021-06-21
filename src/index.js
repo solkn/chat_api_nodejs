@@ -1,6 +1,5 @@
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 8080,
   mongoose = require('mongoose'),
   bodyParser = require('body-parser');
 
@@ -29,6 +28,9 @@ const chatRoute = require("./routes/chat_route");
 app.use("/api/user",userRoute);
 
 app.use("/api/chat",chatRoute);
+
+
+port = process.env.PORT || 8080,
 
 
 app.listen(port);
