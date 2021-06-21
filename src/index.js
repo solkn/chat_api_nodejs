@@ -22,15 +22,15 @@ app.use(bodyParser.urlencoded({
   }));
 app.use(bodyParser.json());
 
-const userRoute = require("./routes/user_route");
-const chatRoute = require("./routes/chat_route");
+const userRoute = require("routes/user_route");
+const chatRoute = require("routes/chat_route");
 
 app.use("/api/user",userRoute);
 
 app.use("/api/chat",chatRoute);
 
 
-port = process.env.PORT || 8080,
+port = process.env.PORT || 8080,n
 
 
 app.listen(port);

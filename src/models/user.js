@@ -8,7 +8,7 @@ var userSchema = new Schema({
     },
     lastName:{
         type:String,
-        requireed:true
+        required:true
     },
     email:{
         type:String,
