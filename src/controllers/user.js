@@ -5,6 +5,12 @@ User = require("../models/user.js");
 
 const { bcryptHash,jwtSign } = require("../utils/util");
 
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
+
 const login = function(req, res,next) {
     const email = req.body.email;
     const password = req.body.password;
@@ -53,6 +59,12 @@ const login = function(req, res,next) {
       next();
   }
 
+  /** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
+
  const signUp = function(req, res,next) {
     User.findOne({ email: req.body.email })
       .then(user => {
@@ -89,6 +101,12 @@ const login = function(req, res,next) {
       next();
   }
 
+  /** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
+
 const getUserByUserName = function(err,usr,next) {
     User.findById(req.params.email,function (req,user) {
         if(err){
@@ -103,11 +121,14 @@ const getUserByUserName = function(err,usr,next) {
     
 }
 
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
 
 
-
-
-const logout = function(req,res) {
+const logout = function(req,res,next) {
     
 }
 

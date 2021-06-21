@@ -2,7 +2,7 @@ var express = require("express");
 
 var router = express.Router();
 
-var userController = require("../controllers/user_controller");
+var userController = require("../controllers/user");
 
 
 router.post("/signup",userController.signUp);

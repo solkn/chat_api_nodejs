@@ -3,6 +3,11 @@
 
  Chat = require("../models/chat");
 
+ /** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
 
  const getChats = function(req,res,next) {
     Chat.find({},function(err,chats){
@@ -16,6 +21,12 @@
     next();
 }
 
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
+
 const getChat = function(req,res,next) {
     Chat.findById(req.params.chat_id,function (err,chat) {
         if(err){
@@ -28,6 +39,12 @@ const getChat = function(req,res,next) {
     next();
     
 }
+
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
 
 const postChat = function(req,res,next){
     var chat = new Chat();
@@ -48,7 +65,11 @@ const postChat = function(req,res,next){
     next();
 
 }
-
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
 const updateChat = function(req,res,next) {
     Chat.findById(req.params.chat_id,function(err,chat){
         if(err){
@@ -72,6 +93,12 @@ const updateChat = function(req,res,next) {
     next();
     
 }
+
+/** 
+  *@param {object}req
+  *@param {object}res
+  *@param {functio}next
+*/
 
 const deleteChat = function(req,res,next) {
     Chat.findByIdAndRemove(req.params.chat_id,function(err,chat){

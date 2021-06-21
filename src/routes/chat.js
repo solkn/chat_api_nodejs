@@ -2,7 +2,7 @@ var express = require("express");
 
 var router = express.Router();
 
-var chatController = require("../controllers/chat_controller");
+var chatController = require("../controllers/chat");
 
 router.route("/")
         .get(chatController.getChats)
