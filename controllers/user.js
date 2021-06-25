@@ -1,21 +1,21 @@
 //var mongoose = require("mongoose");
 //User = mongoose.model("User");
 
-User = require("../models/user.js");
+User = require("../models/user");
 
 const { bcryptHash,jwtSign } = require("../utils/util");
 
 /** 
-  *@param {object}req
-  *@param {object}res
-  *@param {functio}next
+  *@param {Object}req
+  *@param {Object}res
+  *@param {Function}next
 */
 
-const login = function(req, res,next) {
+const login =  async function(req, res,next) {
     const email = req.body.email;
     const password = req.body.password;
   
-    User.findOne({email})
+   await User.findOne({email})
       .then(user => {
         /* Email not found */
         if(!user) {
@@ -59,14 +59,16 @@ const login = function(req, res,next) {
       next();
   }
 
-  /** 
-  *@param {object}req
-  *@param {object}res
-  *@param {functio}next
+ 
+/** 
+  *@param {Object}req
+  *@param {Object}res
+  *@param {Function}next
 */
 
- const signUp = function(req, res,next) {
-    User.findOne({ email: req.body.email })
+
+ const signUp = async function(req, res,next) {
+   await User.findOne({ email: req.body.email })
       .then(user => {
         if(user) {
           return res.json({
@@ -107,8 +109,8 @@ const login = function(req, res,next) {
   *@param {functio}next
 */
 
-const getUserByUserName = function(err,usr,next) {
-    User.findById(req.params.email,function (req,user) {
+const getUserByUserName = async function(err,usr,next) {
+    await User.findById(req.params.email,function (req,user) {
         if(err){
             res.send(err);
         }
@@ -121,10 +123,11 @@ const getUserByUserName = function(err,usr,next) {
     
 }
 
+
 /** 
-  *@param {object}req
-  *@param {object}res
-  *@param {functio}next
+  *@param {Object}req
+  *@param {Object}res
+  *@param {Function}next
 */
 
 
