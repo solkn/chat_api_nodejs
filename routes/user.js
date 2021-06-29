@@ -1,7 +1,7 @@
 var express = require("express");
 var userController = require("../controllers/user");
 var userValidation = require("../middleware/validation/user");
-var { authenticate } = require("../middleware/auth/user");
+var { authenticate } = require("../middleware/auth");
 
 
 var router = express.Router();
@@ -14,7 +14,7 @@ router.post("/signup",
             );
 
 router.post("/login",
-            userController.validate("LOGIN"),
+            userValidation.validate("LOGIN"),
             userController.login
             );
 router.get("/search",authenticate,userController.searchUser);
