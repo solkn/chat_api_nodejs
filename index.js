@@ -8,12 +8,10 @@ var express = require('express'),
 
   
 const userRoute = require('./routes/user');
-//const user2Route = require('./routes/message');
 const messageRoute = require('./routes/message');
 
   mongoose.Promise = global.Promise;
 
- // var url = "mongodb://localhost/chatdb";
 mongoose.connect(process.env.DB_CONNECTION,
               {
                 useUnifiedTopology:true,
