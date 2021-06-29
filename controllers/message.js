@@ -8,7 +8,7 @@ Message = require("../models/message");
 */
 
 
- exports.getAllMessages = async(req,res,next) {
+ exports.getAllMessages = async(req,res,next) =>{
     await Message.find({},function(err,chats){
         if(err){
             res.send(err);
@@ -28,7 +28,7 @@ Message = require("../models/message");
 */
 
 
-exports.getMessage = async(req,res,next) {
+exports.getMessage = async(req,res,next) =>{
    await Message.findById(req.params.message_id,function (err,message) {
         if(err){
             res.send(err);
@@ -49,7 +49,7 @@ exports.getMessage = async(req,res,next) {
 */
 
 
- exports.postMessage =  async(req,res,next){
+ exports.postMessage =  async(req,res,next)=>{
     var chat = new Message();
     chat.msg = req.body.msg;
     chat.msgFrom = req.body.msgFrom;
@@ -76,7 +76,7 @@ exports.getMessage = async(req,res,next) {
   *@param {Function}next
 */
 
-exports.updateMessage = async(req,res,next) {
+exports.updateMessage = async(req,res,next) =>{
     await Message.findById(req.params.message_id,function(err,chat){
         if(err){
             res.send(chat);
@@ -108,7 +108,7 @@ exports.updateMessage = async(req,res,next) {
 */
 
 
-exports.deleteMessage = async(req,res,next) {
+exports.deleteMessage = async(req,res,next) =>{
     await message.findByIdAndRemove(req.params.message_id,function(err,chat){
 
         if(err){
