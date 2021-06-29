@@ -1,7 +1,4 @@
-//var mongoose = require("mongoose");
-//Chat = mongoose.model("Chats");
-
- Message = require("../models/message");
+Message = require("../models/message");
 
 
 /** 
@@ -11,7 +8,7 @@
 */
 
 
- const getChats = async function(req,res,next) {
+ const getAllMessages = async function(req,res,next) {
     await Message.find({},function(err,chats){
         if(err){
             res.send(err);
@@ -31,7 +28,7 @@
 */
 
 
-const getChat = async function(req,res,next) {
+const getMessage = async function(req,res,next) {
    await Message.findById(req.params.message_id,function (err,message) {
         if(err){
             res.send(err);
@@ -52,7 +49,7 @@ const getChat = async function(req,res,next) {
 */
 
 
-const postChat =  async function(req,res,next){
+const postMessage =  async function(req,res,next){
     var chat = new Message();
     chat.msg = req.body.msg;
     chat.msgFrom = req.body.msgFrom;
@@ -79,7 +76,7 @@ const postChat =  async function(req,res,next){
   *@param {Function}next
 */
 
-const updateChat = async function(req,res,next) {
+const updateMessage = async function(req,res,next) {
     await Message.findById(req.params.message_id,function(err,chat){
         if(err){
             res.send(chat);
@@ -111,7 +108,7 @@ const updateChat = async function(req,res,next) {
 */
 
 
-const deleteChat = async function(req,res,next) {
+const deleteMessage = async function(req,res,next) {
     await message.findByIdAndRemove(req.params.message_id,function(err,chat){
 
         if(err){
@@ -128,9 +125,9 @@ const deleteChat = async function(req,res,next) {
 }
 
 module.exports = {
-    getChats,
-    getChat,
-    postChat,
-    updateChat,
-    deleteChat,
+    getAllMessages,
+    getMessage,
+    postMessage,
+    updateMessage,
+    deleteMessage,
 }

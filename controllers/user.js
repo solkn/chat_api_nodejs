@@ -1,143 +1,105 @@
-//var mongoose = require("mongoose");
-//User = mongoose.model("User");
+const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
-User = require("../models/user");
+/**
+ *
+ * @param {ObjectId} id
+ * @returns
+ */
+const getToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
 
-const { bcryptHash,jwtSign } = require("../utils/util");
-
-/** 
-  *@param {Object}req
-  *@param {Object}res
-  *@param {Function}next
-*/
-
-const login =  async function(req, res,next) {
-    const email = req.body.email;
-    const password = req.body.password;
-  
-   await User.findOne({email})
-      .then(user => {
-        /* Email not found */
-        if(!user) {
-          return res.json({
-            status: 'USER_NOT_FOUND',
-            message: 'user not found',
-          });
-        }
-  
-        /* Check if password is correct */
-        bcrypt.compare(password, user.password).then(isMatch => {
-          if(!isMatch) {
-            return res.json({
-              status: 'PASSWORD_INCORRECT',
-              message: 'password incorrect',
-            });
-          }
-  
-          const payload = {
-            id: user.id,
-            firstName:user.firstName,
-            lastName:user.lastName,
-            email: user.email,
-            createdDate: user.createdDate,
-          }
-  
-          jwtSign(payload)
-            .then(token => {
-              res.json({
-                status: true,
-                message: 'Login success!',
-                ...payload,
-                token: `Bearer ${token}`,
-              });
-            })
-            .catch(err => {
-              throw new Error(err);
-            })
-        });
+/**
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+exports.login = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        status: "error",
+        message: errors.array()[0].msg,
       });
-      next();
-  }
+    }
 
- 
-/** 
-  *@param {Object}req
-  *@param {Object}res
-  *@param {Function}next
-*/
-
-
- const signUp = async function(req, res,next) {
-   await User.findOne({ email: req.body.email })
-      .then(user => {
-        if(user) {
-          return res.json({
-            status: 'EMAIL_ALREADY_EXISTS',
-            message: 'email already exist',
-          });
-        }
-  
-        const newUser = User({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          password: req.body.password,
-        });
-  
-        bcryptHash(newUser.password)
-          .then(hash => {
-            newUser.password = hash;
-            return newUser.save();
-          })
-          .then(() => {
-            res.json({
-              status: true,
-              message: 'hashing password success!',
-            });
-          })
-          .catch(err => {
-            throw new Error(err);
-          });
-  
+    const user = await User.findOne({ email: req.body.email }).select(
+      "+password"
+    );
+    if (
+      !user ||
+      !(await user.verifyPassword(req.body.password, user.password))
+    ) {
+      res.status(401).json({
+        status: "error",
+        message: "Invalid email or password",
       });
-      next();
+    }
+
+    const token = getToken(user._id);
+    res.status(201).json({
+      status: "success",
+      token,
+      user,
+    });
+  } catch (err) {
+    //TODO
   }
+};
 
-  /** 
-  *@param {object}req
-  *@param {object}res
-  *@param {functio}next
-*/
+/**
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+exports.signup = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        status: "error",
+        message: errors.array()[0].msg,
+      });
+    }
+    const user = await User.create(req.body);
+    const token = getToken(user._id);
+    res.status(201).json({
+      status: "success",
+      token,
+      user,
+    });
+  } catch (err) {
+    //TODO: Handle Error
+  }
+};
 
-const getUserByUserName = async function(err,usr,next) {
-    await User.findById(req.params.email,function (req,user) {
-        if(err){
-            res.send(err);
-        }
-        res.json({
-            data:user,
-        })
-        
-    })
-    next();
-    
-}
-
-
-/** 
-  *@param {Object}req
-  *@param {Object}res
-  *@param {Function}next
-*/
-
-
-const logout = function(req,res,next) {
-    
-}
-
-module.exports = {
-    login,
-    signUp,
-    getUserByUserName,
-    logout
-}
+/**
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+exports.searchUser = async (req, res, next) => {
+  try {
+    const regex = new RegExp(req.query.q);
+    const users = await User.find({
+      email: {
+        $regex: regex,
+        $options: "si",
+      },
+    });
+    res.status(200).json({
+      status: "success",
+      users,
+    });
+  } catch (err) {
+    //TODO: Handle Error
+  }
+};

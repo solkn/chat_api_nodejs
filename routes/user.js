@@ -1,13 +1,22 @@
 var express = require("express");
+var userController = require("../controllers/user");
+var userValidation = require("../middleware/validation/user");
+var { authenticate } = require("../middleware/auth/user");
+
 
 var router = express.Router();
 
-var userController = require("../controllers/user");
 
 
-router.post("/signup",userController.signUp);
+router.post("/signup",
+            userValidation.validate("SIGNUP"),
+            userController.signUp
+            );
 
-router.post("/login",userController.login);
-
+router.post("/login",
+            userController.validate("LOGIN"),
+            userController.login
+            );
+router.get("/search",authenticate,userController.searchUser);
 
 module.exports = router;

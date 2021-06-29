@@ -1,18 +1,20 @@
 var express = require("express");
+var messageController = require("../controllers/message");
+var messageValidation = require("../middleware/validation/message");
+var { authenticate } = require("../middleware/auth");
 
 var router = express.Router();
 
-var chatController = require("../controllers/message");
 
 router.route("/")
-        .get(chatController.getChats)
-        .post(chatController.postChat);
+        .get(authenticate,messageController.getAllMessages)
+        .post(authenticate,messageValidation.validate("CREATE"),messageController.postMessage);
 
 router.route("/:message_id")
-     .get(chatController.getChat)
-     .put(chatController.updateChat)
-     .patch(chatController.updateChat)
-     .delete(chatController.deleteChat);
+     .get(authenticate,messageValidation.validate("GET"), messageController.getMessage)
+     .put(authenticate,messageValidation.validate("UPDATE"),messageController.updateMessage)
+     .patch(authenticate,messageValidation.validate("UPDATE"),messageController.updateMessage)
+     .delete(authenticate,messageValidation.validate("DELETE"),messageController.deleteMessage);
 
 
 module.exports = router;
