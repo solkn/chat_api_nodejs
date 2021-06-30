@@ -1,14 +1,12 @@
-var express = require('express'),
+const express = require('express'),
   app = express(),
   mongoose = require('mongoose'),
   bodyParser = require('body-parser'),
-  dotenv = require('dotenv');
+  dotenv = require('dotenv'),
+  userRoute = require("./routes/user"),
+  messageRoute = require("./routes/message");
 
   dotenv.config();
-
-  
-const userRoute = require('./routes/user');
-const messageRoute = require('./routes/message');
 
   mongoose.Promise = global.Promise;
 
@@ -20,8 +18,8 @@ mongoose.connect(process.env.DB_CONNECTION,
                 useFindAndModify: true,
               }
               //()=>console.log("database connected!")
-              ).then(console.log("database connected correctly!"))
-              .catch((err)=>console.log(err));
+              ).then(console.log("database connected!"))
+              .catch((err)=>console.log("database not connected!"));
 // var databaseConnection = mongoose.connection;
 // if(!databaseConnection){
 //     console.log("database not connected");

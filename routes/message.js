@@ -1,9 +1,9 @@
-var express = require("express");
-var messageController = require("../controllers/message");
-var messageValidation = require("../middleware/validation/message");
-var { authenticate } = require("../middleware/auth");
+const express = require("express");
+const messageController = require("../controllers/message");
+const messageValidation = require("../middleware/validation/message");
+const { authenticate } = require("../middleware/auth");
 
-var router = express.Router();
+const router = express.Router();
 
 
 router.route("/")

@@ -51,6 +51,7 @@ exports.login = async (req, res, next) => {
   } catch (err) {
     //TODO
   }
+  next();
 };
 
 /**
@@ -78,7 +79,8 @@ exports.signup = async (req, res, next) => {
   } catch (err) {
     //TODO: Handle Error
   }
-};
+  next();
+}
 
 /**
  *
@@ -102,4 +104,5 @@ exports.searchUser = async (req, res, next) => {
   } catch (err) {
     //TODO: Handle Error
   }
-};
+  next();
+}

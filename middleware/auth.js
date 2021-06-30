@@ -8,7 +8,7 @@ const { promisify } = require("util");
  * @param {Object} res
  * @param {Function} next
  */
-exports.verifyUser = async (req, res, next) => {
+exports.authenticate = async (req, res, next) => {
   try {
     let token = null;
     if (
@@ -34,4 +34,4 @@ exports.verifyUser = async (req, res, next) => {
   } catch (err) {
     //TODO: Handle Invalid Token, Expried Token
   }
-};
+}
