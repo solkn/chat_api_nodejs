@@ -9,49 +9,49 @@ const { valdidationResult } = require("express-validator");
 */
 
 
-//  exports.getAllMessages = async(req,res,next) =>{
-//     await Message.find({},function(err,chats){
-//         if(err){
-//             res.send(err);
+ exports.getAllMessages = async(req,res,next) =>{
+    await Message.find({},function(err,chats){
+        if(err){
+            res.send(err);
+        }
+        res.json({
+               status:"success",
+               data:chats
+        });
+    });
+    //next();
+}
+
+// exports.getAllMessages = async(req,res,next)=>{
+//     try {
+
+//         const errors = valdidationResult(req);
+//         if (!errors.isEmpty()){
+//             res.status(400).json({
+//                 status:"error",
+//                 message:errors.array()[0].msg
+//             });
 //         }
-//         res.json({
-//                status:"success",
-//                data:chats
-//         });
-//     });
+
+//         const messages = await Message.find({});
+//         if(!messages){
+//             res.status(404).json({
+//                 status:"error",
+//                 message:"there is no message"
+//             });
+
+//             res.status(200).json({
+//                 status:"success",
+//                 messages
+//             });
+//         }
+//     } catch (error) {
+        
+        
+//     }
+
 //     next();
 // }
-
-exports.getAllMessages = async(req,res,next)=>{
-    try {
-
-        const errors = valdidationResult(req);
-        if (!errors.isEmpty()){
-            res.status(400).json({
-                status:"error",
-                message:errors.array()[0].msg
-            });
-        }
-
-        const messages = await Message.find({});
-        if(!messages){
-            res.status(404).json({
-                status:"error",
-                message:"there is no message"
-            });
-
-            res.status(200).json({
-                status:"success",
-                messages
-            });
-        }
-    } catch (error) {
-        
-        
-    }
-
-    next();
-}
 
 
 /** 
@@ -99,7 +99,7 @@ exports.getMessage = async(req,res,next) =>{
              data:chat
          });
     });
-    next();
+   //next();
 
 }
 
