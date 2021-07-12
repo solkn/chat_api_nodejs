@@ -19,39 +19,9 @@ const { valdidationResult } = require("express-validator");
                data:chats
         });
     });
-    //next();
 }
 
-// exports.getAllMessages = async(req,res,next)=>{
-//     try {
 
-//         const errors = valdidationResult(req);
-//         if (!errors.isEmpty()){
-//             res.status(400).json({
-//                 status:"error",
-//                 message:errors.array()[0].msg
-//             });
-//         }
-
-//         const messages = await Message.find({});
-//         if(!messages){
-//             res.status(404).json({
-//                 status:"error",
-//                 message:"there is no message"
-//             });
-
-//             res.status(200).json({
-//                 status:"success",
-//                 messages
-//             });
-//         }
-//     } catch (error) {
-        
-        
-//     }
-
-//     next();
-// }
 
 
 /** 
@@ -70,7 +40,6 @@ exports.getMessage = async(req,res,next) =>{
             data:message,
         });
     });
-    next();
     
 }
 
@@ -92,14 +61,12 @@ exports.getMessage = async(req,res,next) =>{
          
          if(err){
              res.send(err);
-             //console.log("error has occurred in adding message")
          }
          res.json({
              message:"new chat created",
              data:chat
          });
     });
-   //next();
 
 }
 
@@ -129,7 +96,6 @@ exports.updateMessage = async(req,res,next) =>{
             
         });
     });
-    next();
     
 }
 
@@ -153,6 +119,5 @@ exports.deleteMessage = async(req,res,next) =>{
         });
 
     });
-    next();
     
 }

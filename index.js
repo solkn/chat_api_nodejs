@@ -4,7 +4,8 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   dotenv = require('dotenv'),
   userRoute = require("./routes/user"),
-  messageRoute = require("./routes/message");
+  messageRoute = require("./routes/message"),
+  roleRoute = require("./routes/role");
 
   dotenv.config();
 
@@ -17,15 +18,8 @@ mongoose.connect(process.env.DB_CONNECTION,
                 useCreateIndex: true,
                 useFindAndModify: true,
               }
-              //()=>console.log("database connected!")
               ).then(console.log("database connected!"))
               .catch((err)=>console.log("database not connected!"));
-// var databaseConnection = mongoose.connection;
-// if(!databaseConnection){
-//     console.log("database not connected");
-// }else{
-//     console.log("databse connected successfully");
-// }
 
 app.use(bodyParser.urlencoded({
    extended: true 
@@ -37,6 +31,8 @@ app.use(express.json());
 app.use("/api/v1/users",userRoute);
 
 app.use("/api/v1/messages",messageRoute);
+
+app.use("/api/v1/roles",roleRoute);
 
 /**
  * @param {object} req

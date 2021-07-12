@@ -9,9 +9,9 @@ const { validationResult } = require("express-validator");
  */
 const getToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: "24h",
   });
-};
+}
 
 /**
  *
@@ -33,7 +33,7 @@ exports.login = async (req, res, next) => {
       "+password"
     );
     if (
-      !user //||
+      !user || req.body.password != user.password
       //!(await user.verifyPassword(req.body.password, user.password))
     ) {
       res.status(401).json({
@@ -49,10 +49,9 @@ exports.login = async (req, res, next) => {
       user,
     });
   } catch (err) {
-    //TODO
+    console.log("error has occurred!");
   }
-  //next();
-};
+}
 
 /**
  *
@@ -77,9 +76,8 @@ exports.signup = async (req, res, next) => {
       user,
     });
   } catch (err) {
-    //TODO: Handle Error
+    console.log("error has occurred!");
   }
-  next();
 }
 
 /**
@@ -104,5 +102,4 @@ exports.searchUser = async (req, res, next) => {
   } catch (err) {
     //TODO: Handle Error
   }
-  next();
 }
