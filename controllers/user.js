@@ -33,8 +33,8 @@ exports.login = async (req, res, next) => {
       "+password"
     );
     if (
-      !user || req.body.password != user.password
-      //!(await user.verifyPassword(req.body.password, user.password))
+      !user ||
+      !(await user.verifyPassword(req.body.password, user.password))
     ) {
       res.status(401).json({
         status: "error",
@@ -80,6 +80,25 @@ exports.signup = async (req, res, next) => {
   }
 }
 
+
+/**
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+exports.getAllUsers = async(req,res,next) =>{
+  await User.find({},function(err,users){
+      if(err){
+          res.send(err);
+      }
+      res.json({
+             status:"success",
+             user:users
+      });
+  });
+}
+
 /**
  *
  * @param {Object} req
@@ -103,3 +122,4 @@ exports.searchUser = async (req, res, next) => {
     //TODO: Handle Error
   }
 }
+

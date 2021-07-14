@@ -18,6 +18,13 @@ router.post("/login",
              userController.login 
              );
 
+
+router.get("/",
+            authenticate,
+            userValidation.validate("GET"),
+            userController.getAllUsers
+            );             
+
 router.get("/search",
             authenticate,
             userValidation.validate("GET"),

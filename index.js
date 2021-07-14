@@ -1,56 +1,100 @@
-const express = require('express'),
-  app = express(),
-  mongoose = require('mongoose'),
-  bodyParser = require('body-parser'),
-  dotenv = require('dotenv'),
-  userRoute = require("./routes/user"),
-  messageRoute = require("./routes/message"),
-  roleRoute = require("./routes/role");
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const http = require("http");
+const socket = require("socket.io");
+const cors = require("cors");
+const userRouter = require("./routes/user");
+const messageRouter = require("./routes/message");
+const roleRouter = require("./routes/role");
 
-  dotenv.config();
 
-  mongoose.Promise = global.Promise;
+dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECTION,
-              {
-                useUnifiedTopology:true,
-                useNewUrlParser:true,
-                useCreateIndex: true,
-                useFindAndModify: true,
-              }
-              ).then(console.log("database connected!"))
-              .catch((err)=>console.log("database not connected!"));
+const app = express();
 
-app.use(bodyParser.urlencoded({
-   extended: true 
-  }));
-app.use(bodyParser.json());
-
-app.use(express.json());
-
-app.use("/api/v1/users",userRoute);
-
-app.use("/api/v1/messages",messageRoute);
-
-app.use("/api/v1/roles",roleRoute);
 
 /**
- * @param {object} req
- * @param {object} res
- * @param {function} next
-*/
+ * SOCKET IMPLEMENTATION
+ */
 
-app.use("*", (req, res, next) => {
-    res.status(400).json({
-      status: "error",
-      message: `The requested url ${req.originalUrl} doesnot exist`,
-    });
-    next();
+const server = http.createServer(app);
+
+const io = socket(server, {
+  cors: { 
+    allowed: "*",
+  },
+});
+  //  const users = [];
+
+  //  const addUser = (userId,socketId)=>{
+  //    !users.some((user)=>users.userId === userId)&&
+  //      users.push({ userId,socketId });
+  //    }; 
+
+  //  const removeUser = (socketId) =>{
+  //      users = users.filter((user)=>user.socketId !== socketId);
+  //  };
+   
+ io.on("connection",(socket)=>{
+   console.log(" a user has connected!");
+   
+    socket.on("addUser", data =>{
+     
+      console.log(data)
+   
+    })
+     io.emit("getUsers","this is from the server socket!");
+
+   // receive message from client and then broadcast to clients
+     
+   socket.on("sendMessage",(msg) =>{
+        io.emit("getMessage", {
+          msg,
+        });
+     });
+
+   socket.on("disconnect",()=>{
+     console.log(" a user disconnectd!");
+     io.emit("getUsers","user is disconnected!");
+   });
+
+  });
+/**
+ * Connection to the database
+ */
+mongoose
+  .connect(process.env.DB_CONNECTION, {
+    useCreateIndex: true,
+    useFindAndModify: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Database Connected!");
   });
 
-port = process.env.PORT || 8080;
+
+app.use(cors());
+app.use(express.json());
+
+/**
+ * Route Middleware
+ */
+
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/messages", messageRouter);
+app.use("/api/v1/roles",roleRouter);
 
 
-app.listen(port,function(){
-     console.log("server is running on: "+port);
+app.use("*", (req, res, next) => {
+  res.status(400).json({
+    status: "error",
+    message: `The requested url ${req.originalUrl} does not exist`,
+  });
+});
+
+const port = process.env.PORT || 8080;
+server.listen(port, () => {
+  console.log(`Server is running at port: ${port}`);
 });

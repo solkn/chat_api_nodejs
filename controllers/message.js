@@ -51,24 +51,49 @@ exports.getMessage = async(req,res,next) =>{
 */
 
 
- exports.postMessage =  async(req,res,next)=>{
-    var chat = new Message();
-    chat.msg = req.body.msg;
-    chat.msgFrom = req.body.msgFrom;
-    chat.msgTo = req.body.msgTo;
+//  exports.postMessage =  async(req,res,next)=>{
+//     var chat = new Message();
+//     chat.msg = req.body.msg;
+//     chat.msgFrom = req.body.msgFrom;
+//     chat.msgTo = req.body.msgTo;
 
-    await chat.save(function(err){
+//     await chat.save(function(err){
          
-         if(err){
-             res.send(err);
-         }
-         res.json({
-             message:"new chat created",
-             data:chat
-         });
-    });
+//          if(err){
+//              res.send(err);
+//          }
+//          res.json({
+//              message:"chat is created",
+//              data:chat
+//          });
+//     });
+// }
 
-}
+exports.postMessage = async (req, res, next) => {
+    try {
+    //   const errors = validationResult(req);
+    //   if (!errors.isEmpty()) {
+    //     res.status(400).json({
+    //       status: "error",
+    //       message: errors.array()[0].msg,
+    //     });
+    //   }
+      const data = await Message.create({
+        ...req.body,
+        msg: req.body.msg,
+        msgFrom: req.user._id,
+      });
+      res.status(201).json({
+        status: "success",
+        data,
+      });
+    } catch (err) {
+      //TODO
+    }
+  }
+
+
+
 
 /** 
   *@param {Object}req
