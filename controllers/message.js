@@ -9,17 +9,47 @@ const { valdidationResult } = require("express-validator");
 */
 
 
- exports.getAllMessages = async(req,res,next) =>{
-    await Message.find({},function(err,chats){
-        if(err){
-            res.send(err);
-        }
-        res.json({
-               status:"success",
-               data:chats
-        });
+//  exports.getAllMessages = async(req,res,next) =>{
+//     await Message.find({},function(err,chats){
+//         if(err){
+//             res.send(err);
+//         }
+//         res.json({
+//                status:"success",
+//                data:chats
+//         });
+//     });
+// }
+
+
+exports.getAllMessages = async (req, res, next) => {
+  try {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   res.status(400).json({
+    //     status: "error",
+    //     message: errors.array()[0].msg,
+    //   });
+    // }
+    const data = await Message.find().populate("msgFrom").exec();
+  // .exec(function (err, sender) {
+  //   if (err) return handleError(err);
+  //  // console.log('The sender is %s', sender.users.user_id);
+  // });
+    if (!data) {
+      res.status(404).json({
+        status: "error",
+        message: "messages do not exist",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      data,
     });
-}
+  } catch (err) {
+    //TODO
+  }
+};
 
 
 
@@ -31,17 +61,44 @@ const { valdidationResult } = require("express-validator");
 */
 
 
-exports.getMessage = async(req,res,next) =>{
-   await Message.findById(req.params.message_id,function (err,message) {
-        if(err){
-            res.send(err);
-        }
-        res.json({
-            data:message,
-        });
-    });
+// exports.getMessage = async(req,res,next) =>{
+//    await Message.findById(req.params.message_id,function (err,message) {
+//         if(err){
+//             res.send(err);
+//         }
+//         res.json({
+//             data:message,
+//         });
+//     });
     
-}
+// }
+
+
+
+ exports.getMessage = async (req, res, next) => {
+  try {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   res.status(400).json({
+    //     status: "error",
+    //     message: errors.array()[0].msg,
+    //   });
+    // }
+    const data = await Message.findById(req.params.message_id).populate("msgFrom").exec();
+    if (!data) {
+      res.status(404).json({
+        status: "error",
+        message: "message with this ID does not exist",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    //TODO
+  }
+};
 
 
 /** 

@@ -37,7 +37,7 @@ const io = socket(server, {
   //  };
    
  io.on("connection",(socket)=>{
-   console.log(" a user has connected!");
+   console.log("user has connected!");
    
     socket.on("addUser", data =>{
      
@@ -52,10 +52,11 @@ const io = socket(server, {
         io.emit("getMessage", {
           msg,
         });
+        console.log("this is client message",msg);
      });
 
    socket.on("disconnect",()=>{
-     console.log(" a user disconnectd!");
+     console.log("user disconnectd!");
      io.emit("getUsers","user is disconnected!");
    });
 
